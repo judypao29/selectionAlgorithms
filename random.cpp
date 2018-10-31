@@ -37,7 +37,11 @@ int quickSelect(int k, std::vector<int> input)
 {
   std::vector<int> lessThan;
   std::vector<int> greaterThan;
-
+  if (input.empty())
+  {
+    std::cout << "oh nos" << std::endl;
+    return 1;
+  }
   int randomE = input[getRandomElement(input.size())];
 
   //getRank
