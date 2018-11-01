@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 
   std::vector<int> vectorOfData;
 
+  //parsing
   while (std::getline(inputData, stringNum, ','))
   {
     int num = stoi(stringNum);
@@ -39,7 +40,7 @@ int quickSelect(int k, std::vector<int> input)
   std::vector<int> greaterThan;
   if (input.empty())
   {
-    std::cout << "oh nos" << std::endl;
+    std::cout << "oh no! The input is empty!" << std::endl;
     return 1;
   }
   int randomE = input[getRandomElement(input.size())];
@@ -56,7 +57,7 @@ int quickSelect(int k, std::vector<int> input)
       greaterThan.push_back(input[i]);
     }
   }
-  int rankOfE = lessThan.size();
+  int rankOfE = lessThan.size() + 1;
 
   //recursive calls
   if (rankOfE == k)
@@ -78,7 +79,7 @@ int getRandomElement(int sizeOfData)
   srand(time(NULL));
   // return 2;
   int temp = rand() % sizeOfData;
-  std::cout << temp << std::endl;
+  // std::cout << temp << std::endl;
 
   return temp;
 }
