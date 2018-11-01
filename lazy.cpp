@@ -45,20 +45,20 @@ int main(int argc, char* argv[])
 
 int lazySelect(int k, std::vector<int>& input)
 {
+    std::cout << "starting lazySelect\n";
   std::vector<int> multiSubsetOfN;
-  if (input.empty())
-  {
-    std::cout << "oh no! The input is empty!" << std::endl;
-    return 1;
-  }
+
+  std::cout << "starting random Selecting\n";
   // choose n^{3/4} elements from input, put into subset.
   selectRandomElements(input, multiSubsetOfN);
 
-
+  std::cout << "starting sort\n";
   //sorts in n^{3/4}log n time
   std::sort(multiSubsetOfN.begin(), multiSubsetOfN.end());
 
-  int x = (k * (floor(pow(input.size(), -.25))));
+  std::cout << "getting x\n";
+
+  int x = (k * (floor(pow(input.size(), -0.25))));
   int leftA = multiSubsetOfN[getA(x, input.size())];
   int rightB = multiSubsetOfN[getB(x, input.size())];
 
@@ -66,11 +66,13 @@ int lazySelect(int k, std::vector<int>& input)
   std::vector<int> lessThanB;
   std::vector<int> betweenAandB;
 
+  std::cout << "starting getRankOfAandB\n";
   auto temp = getRankOfAandB(input, greaterThanA, lessThanB, betweenAandB, leftA, rightB, k);
 
   int rankA = temp.first;
   int rankB = temp.second;
 
+  std::cout << "starting conditionals\n";
   if (k < std::floor(pow(input.size(), 0.25)))
   {
     //get P leqB
@@ -78,8 +80,6 @@ int lazySelect(int k, std::vector<int>& input)
     if ((k > rankB)||
     (lessThanB.size() > (4 * std::floor(pow(input.size(), 0.75)) + 2)))
     {
-        std::cout << "if: 2 \n";
-
       return lazySelect(k, input);
     }
     else
@@ -95,8 +95,6 @@ int lazySelect(int k, std::vector<int>& input)
     if ((k < rankA )||
         (greaterThanA.size() > (4 * std::floor(pow(input.size(), 0.75)) + 2)))
     {
-        std::cout << "if: 3\n";
-
       return lazySelect(k, input);
     }
     else
@@ -113,8 +111,6 @@ int lazySelect(int k, std::vector<int>& input)
     if (((k > rankB) || (k < rankA)) ||
         (betweenAandB.size() > (4 * std::floor(pow(input.size(), 0.75)) + 2)))
     {
-        std::cout << "if: 1 \n";
-
       return lazySelect(k, input);
     }
     else
@@ -128,8 +124,11 @@ int lazySelect(int k, std::vector<int>& input)
 
 void selectRandomElements(std::vector<int>& inputData, std::vector<int>& subset)
 {
+    std::cout << "inside random selecting" << std::endl;
   srand(time(NULL));
+  std::cout << "before calculation" << std::endl;
   int numElementsInSubset = (int)std::floor(pow(inputData.size(), 0.75));
+  std::cout << "after calculation" << std::endl;
 
   for (int i = 0; i < numElementsInSubset; i++)
   {
