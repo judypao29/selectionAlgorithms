@@ -5,14 +5,16 @@
 #include<time.h>
 #include<cmath>
 #include<algorithm>
+#include<utility>
 
 
 int lazySelect(int k, std::vector<int>& input);
 void selectRandomElements(std::vector<int>& inputData, std::vector<int>& subset);
 int getA(int x, int inputSize);
 int getB(int x, int inputSize);
-int getRank(int a, std::vector<int>& input);
-
+std::pair<int, int> getRankOfAandB(std::vector<int>& input,
+    std::vector<int>& greaterThanA, std::vector<int>& lessThanB,
+    std::vector<int>& betweenAandB, int leftA, int rightB, int k);
 // int getRank(int e, std::vector<int> input);
 int getRandomElement(int sizeOfData);
 
@@ -60,67 +62,68 @@ int lazySelect(int k, std::vector<int>& input)
   int leftA = multiSubsetOfN[getA(x, input.size())];
   int rightB = multiSubsetOfN[getB(x, input.size())];
 
-  std::vector<int> setP;
-  if ((k > std::floor(pow(input.size(), 0.25))) &&
-            (k < (input.size() - floor(pow(input.size(), 0.25)))))
-  {
-    //get P between A and B
-    // if not in P, recursive call
-    if (input[k] > rightB && input[k] < leftA)
-    {
-      return lazySelect(k, input);
-    }
-    for (int i = 0; i < input.size(); i++)
-    {
-      if (input[i] >= leftA && input[i] <= rightB)
-      {
-        setP.push_back(input[i]);
-      }
-    }
-  }
-  else if (k < std::floor(pow(input.size(), 0.25)))
+  std::vector<int> greaterThanA;
+  std::vector<int> lessThanB;
+  std::vector<int> betweenAandB;
+
+  auto temp = getRankOfAandB(input, greaterThanA, lessThanB, betweenAandB, leftA, rightB, k);
+
+  int rankA = temp.first;
+  int rankB = temp.second;
+
+  if (k < std::floor(pow(input.size(), 0.25)))
   {
     //get P leqB
     // if not in P, recursive call
-    if (input[k] > rightB)
+    if ((k > rankB)||
+    (lessThanB.size() > (4 * std::floor(pow(input.size(), 0.75)) + 2)))
     {
+        std::cout << "if: 2 \n";
+
       return lazySelect(k, input);
     }
-    for (int i = 0; i < input.size(); i++)
+    else
     {
-      if (input[i] <= rightB)
-      {
-        setP.push_back(input[i]);
-      }
+        std::sort(lessThanB.begin(), lessThanB.end());
+        return lessThanB[k - rankA + 1];
     }
   }
-  else if (k > (input.size() - std::floor(pow(input.size(), 0.25))))
+  else if (k > ((input.size() - std::floor(pow(input.size(), 0.25)))))
   {
     //get P geqA
     // if not in P, recursive call
-    if (input[k] < leftA)
+    if ((k < rankA )||
+        (greaterThanA.size() > (4 * std::floor(pow(input.size(), 0.75)) + 2)))
     {
+        std::cout << "if: 3\n";
+
       return lazySelect(k, input);
     }
-    for (int i = 0; i < input.size(); i++)
+    else
     {
-      if (input[i] >= leftA)
-      {
-        setP.push_back(input[i]);
-      }
+        std::sort(greaterThanA.begin(), greaterThanA.end());
+        return greaterThanA[k - rankA + 1];
     }
   }
+  else if ((k >= std::floor(pow(input.size(), 0.25))) &&
+            (k <= (input.size() - floor(pow(input.size(), 0.25)))))
+  {
+    //get P between A and B
+    // if not in P, recursive call
+    if (((k > rankB) || (k < rankA)) ||
+        (betweenAandB.size() > (4 * std::floor(pow(input.size(), 0.75)) + 2)))
+    {
+        std::cout << "if: 1 \n";
 
-  if (setP.size() > (4 * std::floor(pow(input.size(), 0.75)) + 2))
-  {
-    return lazySelect(k, input);
+      return lazySelect(k, input);
+    }
+    else
+    {
+        std::sort(betweenAandB.begin(), betweenAandB.end());
+        return betweenAandB[k - rankA + 1];
+    }
   }
-  else
-  {
-      std::sort(setP.begin(), setP.end());
-      int rankA = getRank(leftA, input);
-      return setP[k - rankA + 1];
-  }
+  return 0;
 }
 
 void selectRandomElements(std::vector<int>& inputData, std::vector<int>& subset)
@@ -144,15 +147,29 @@ int getB(int x, int inputSize)
   return std::min(std::ceil(x - std::floor(pow(inputSize, 0.5))), std::floor(pow(inputSize, 0.75)));
 }
 
-int getRank(int a, std::vector<int>& input)
+std::pair<int, int> getRankOfAandB(std::vector<int>& input,
+    std::vector<int>& greaterThanA, std::vector<int>& lessThanB,
+    std::vector<int>& betweenAandB, int leftA, int rightB, int k)
 {
-  int count = 1;
-  for (int i = 0; i < input.size(); i++)
-  {
-    if (input[i] < a)
+    for (int i = 0; i < input.size(); i++)
     {
-      count++;
+        if (input[i] >= leftA && input[i] <= rightB)
+        {
+            greaterThanA.push_back(input[i]);
+            lessThanB.push_back(input[i]);
+            betweenAandB.push_back(input[i]);
+        }
+        else if (input[i] >= leftA)
+        {
+            greaterThanA.push_back(input[i]);
+        }
+        else if (input[i] <= rightB)
+        {
+            lessThanB.push_back(input[i]);
+        }
     }
-  }
-  return count;
+    int rankA = input.size() - greaterThanA.size();
+    int rankB = lessThanB.size();
+
+    return std::make_pair(rankA, rankB);
 }
