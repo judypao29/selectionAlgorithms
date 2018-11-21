@@ -112,9 +112,6 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
     {
         //get P between A and B
         // if not in P, recursive call
-        // std::cout << "\tsize " << lessThanB.size() << "\n";
-        // std::cout << rightB << std::endl << rankA << std::endl << rankB << std::endl;
-        // std::cout << (4 * (pow(input.size(), 0.75)) + 2) << std::endl;
         if (((k > rankB) || (k < rankA)) ||
         (betweenAandB.size() > (4 * (pow(input.size(), 0.75)) + 2)))
         {
