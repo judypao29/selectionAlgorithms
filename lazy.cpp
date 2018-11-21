@@ -89,7 +89,7 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
         else
         {
             std::sort(lessThanB.begin(), lessThanB.end());
-            return lessThanB[k - rankA];
+            return lessThanB[k - 1];
         }
     }
     else if (k > ((input.size() - (pow(input.size(), 0.25)))))
