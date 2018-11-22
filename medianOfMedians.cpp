@@ -10,7 +10,7 @@ o	Repeat until everything is read in.
 #include<iostream>
 #include<string>
 #include<vector>
-int select(int k, std::vector<int> setOfElements);
+int select(int k, std::vector<int> setOfElements, std::vector<int> originalInput,int sizeOfGroups);
 int getRank(int medianOfMedians, std::vector<int> originalInput, std::vector<int>& greaterThan, std::vector<int>& lessThan);
 int medOfMedRecur(std::vector<int> medians, int sizeOfGroups);
 // format: ./run file.csv <int k> <int sizeOfGroups>
@@ -31,21 +31,21 @@ int main(int argc, char* argv[])
   }
   inputData.close();
 
-  int selectWoAh = select(k, originalInput)
-  std::cout << selectWoAh << '\n';
-  return select;
+  //call selection algorithm and return k-th element
+  int solution = select(k, originalInput, originalInput, sizeOfGroups);
 
+  std::cout << "The k-th element where k is " << k << " is: " << solution << std::endl;
 
   return 0;
 }
 
-int select(int k, std::vector<int> setOfElements)
+int select(int k, std::vector<int> setOfElements, std::vector<int> originalInput, int sizeOfGroups)
 {
     std::vector<int> greaterThan;
     std::vector<int> lessThan;
 
     //recursive call to find median of medians
-    int medianOfMedians = medOfMedRecur(originalInput, sizeOfGroups);
+    int medianOfMedians = medOfMedRecur(setOfElements, sizeOfGroups);
 
     //get rank of the medianOfMedians
     int rankOfMedian = getRank(medianOfMedians, originalInput, greaterThan, lessThan);
@@ -55,21 +55,33 @@ int select(int k, std::vector<int> setOfElements)
     {
         return medianOfMedians;
     }
-    else if (rankOfMedian > k)
+    else if (rankOfMedian < k)
     {
-        return select(k, greaterThan);
+        return select(k, greaterThan, originalInput, sizeOfGroups);
     }
     else
     {
-        return select(k, lessThan);
+        return select(k, lessThan, originalInput, sizeOfGroups);
     }
 }
 
 int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
 {
+    // if (elements.empty())
+    // {
+    //     std::cout << "this should never happen" << '\n';
+    //     return -1;
+    // }
+    if (elements.size() == 1)
+    {
+        return elements[0];
+    }
+
     int counter = 0;
     std::vector<int> mediansVector;
     std::vector<int> heap;
+
+    //split into groups of specified size, push median of each group into the mediansVector
     for (int i = 0; i < elements.size(); i++)
     {
         if (counter != sizeOfGroups)
@@ -79,7 +91,6 @@ int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
         }
         else
         {
-            counter = 0;
             make_heap(heap.begin(), heap.end());
             for (int i = 0; i < (sizeOfGroups / 2); i++)
             {
@@ -89,15 +100,17 @@ int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
             pop_heap(heap.begin(), heap.end());
             mediansVector.push_back(heap.back());
 
+            //empty the heap
             while(!heap.empty())
             {
                 heap.pop_back();
             }
-
             heap.push_back(elements[i]);
-            counter++;
+            counter = 1;
         }
     }
+
+    //if there is another median, push it into mediansVector
     if (heap.size() == sizeOfGroups)
     {
         counter = 0;
@@ -110,6 +123,8 @@ int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
         pop_heap(heap.begin(), heap.end());
         mediansVector.push_back(heap.back());
     }
+
+    //if there's nothing in the mediansVector, push all elements in the heap to mediansVector
     if (mediansVector.empty())
     {
         for (int i = 0; i < heap.size(); i++)
@@ -117,17 +132,14 @@ int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
             mediansVector.push_back(heap[i]);
         }
     }
+
     if (mediansVector.size() <= sizeOfGroups)
     {
-        return findMedian();
+        sort(mediansVector.begin(), mediansVector.end());
+        return mediansVector[mediansVector.size() / 2];
     }
     else
     {
-        if (mediansVector.size() == 0)
-        {
-            std::cout << "uh oh" << '\n';
-            return -123;
-        }
         return medOfMedRecur(mediansVector, sizeOfGroups);
     }
 }
@@ -138,53 +150,12 @@ int getRank(int medianOfMedians, std::vector<int> originalInput, std::vector<int
     {
         if (originalInput[i] > medianOfMedians)
         {
-            greaterThan.push_back(input[i]);
+            greaterThan.push_back(originalInput[i]);
         }
-        else if (input[i] < rightB)
+        else if (originalInput[i] < medianOfMedians)
         {
-            lessThan.push_back(input[i]);
+            lessThan.push_back(originalInput[i]);
         }
     }
-    int rank = lessThan.size();
+    return (lessThan.size() + 1);
 }
-//
-// void make_heapTest()
-// {
-//     std::vector<int> heap = {2, 3, 1, 10};
-//
-//     make_heap(heap.begin(), heap.end());
-//
-//     // std::cout << heap.at(0) << std::endl;
-//     // std::cout << heap.at(1) << std::endl;
-//     // std::cout << heap.at(2) << std::endl;
-//     // std::cout << heap.at(3) << std::endl;
-//     // std::cout << heap.at(4) << std::endl;
-//     //
-//     //
-//
-//
-//     pop_heap(heap.begin(), heap.end());
-//     std::cout << heap.back() << std::endl;
-//     heap.pop_back();
-//
-//     pop_heap(heap.begin(), heap.end());
-//     std::cout << heap.back() << std::endl;
-//     heap.pop_back();
-//
-//     pop_heap(heap.begin(), heap.end());
-//     std::cout << heap.back() << std::endl;
-//     heap.pop_back();
-//
-//     pop_heap(heap.begin(), heap.end());
-//     std::cout << heap.back() << std::endl;
-//     heap.pop_back();
-//     //
-//     // pop_heap(heap.begin(), heap.end());
-//     // std::cout << heap.back() << std::endl;
-//     // heap.pop_back();
-//
-//     std::cout << heap.back() << std::endl;
-//     std::cout << heap.size() << std::endl;
-//
-//
-// }
