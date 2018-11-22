@@ -67,11 +67,11 @@ int select(int k, std::vector<int> setOfElements, std::vector<int> originalInput
 
 int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
 {
-    // if (elements.empty())
-    // {
-    //     std::cout << "this should never happen" << '\n';
-    //     return -1;
-    // }
+    if (elements.empty())
+    {
+        std::cout << "this should never happen" << '\n';
+        return -1;
+    }
     if (elements.size() == 1)
     {
         return elements[0];
