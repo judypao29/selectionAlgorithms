@@ -37,6 +37,11 @@ int main(int argc, char* argv[])
     }
     inputData.close();
 
+
+    //start timer
+    auto start = std::chrono::high_resolution_clock::now();
+
+    //use lazy select to return k-th element
     int count = 1;
     int ret = lazySelect(k, vectorOfData, count);
     while (ret == -1)
@@ -44,8 +49,15 @@ int main(int argc, char* argv[])
         ret = lazySelect(k, vectorOfData, ++count);
     }
 
-    std::cout << "The k-th element where k is " << k << " is: " << ret << std::endl;
+    //stop timer
+    auto stop = std::chrono::high_resolution_clock::now();
 
+    //get duration
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+    std::cout << "The k-th element where k is " << k << " is: " << ret << std::endl;
+    std::cout << "Time taken by Lazy Select: "
+             << duration.count() << " microseconds" << std::endl;
     return 0;
 }
 

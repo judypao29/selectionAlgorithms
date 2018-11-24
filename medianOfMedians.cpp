@@ -10,6 +10,8 @@ o	Repeat until everything is read in.
 #include<iostream>
 #include<string>
 #include<vector>
+#include <chrono>
+
 int select(int k, std::vector<int> setOfElements, int sizeOfGroups);
 int getRank(int medianOfMedians, std::vector<int> setOfElements, std::vector<int>& greaterThan, std::vector<int>& lessThan);
 int medOfMedRecur(std::vector<int> medians, int sizeOfGroups);
@@ -31,11 +33,21 @@ int main(int argc, char* argv[])
   }
   inputData.close();
 
+  //start timer
+  auto start = std::chrono::high_resolution_clock::now();
+
   //call selection algorithm and return k-th element
   int solution = select(k, originalInput, sizeOfGroups);
 
-  std::cout << "The k-th element where k is " << k << " is: " << solution << std::endl;
+  //stop timer
+  auto stop = std::chrono::high_resolution_clock::now();
 
+  //get duration
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+  std::cout << "The k-th element where k is " << k << " is: " << solution << std::endl;
+  std::cout << "Time taken by Median of Medians: "
+           << duration.count() << " microseconds" << std::endl;
   return 0;
 }
 
