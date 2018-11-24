@@ -10,8 +10,8 @@ o	Repeat until everything is read in.
 #include<iostream>
 #include<string>
 #include<vector>
-int select(int k, std::vector<int> setOfElements, std::vector<int> originalInput,int sizeOfGroups);
-int getRank(int medianOfMedians, std::vector<int> originalInput, std::vector<int>& greaterThan, std::vector<int>& lessThan);
+int select(int k, std::vector<int> setOfElements, int sizeOfGroups);
+int getRank(int medianOfMedians, std::vector<int> setOfElements, std::vector<int>& greaterThan, std::vector<int>& lessThan);
 int medOfMedRecur(std::vector<int> medians, int sizeOfGroups);
 // format: ./run file.csv <int k> <int sizeOfGroups>
 int main(int argc, char* argv[])
@@ -32,23 +32,25 @@ int main(int argc, char* argv[])
   inputData.close();
 
   //call selection algorithm and return k-th element
-  int solution = select(k, originalInput, originalInput, sizeOfGroups);
+  int solution = select(k, originalInput, sizeOfGroups);
 
   std::cout << "The k-th element where k is " << k << " is: " << solution << std::endl;
 
   return 0;
 }
 
-int select(int k, std::vector<int> setOfElements, std::vector<int> originalInput, int sizeOfGroups)
+int select(int k, std::vector<int> setOfElements, int sizeOfGroups)
 {
     std::vector<int> greaterThan;
     std::vector<int> lessThan;
 
     //recursive call to find median of medians
     int medianOfMedians = medOfMedRecur(setOfElements, sizeOfGroups);
+    std::cout << "Median: " << medianOfMedians << '\n';
 
     //get rank of the medianOfMedians
-    int rankOfMedian = getRank(medianOfMedians, originalInput, greaterThan, lessThan);
+    int rankOfMedian = getRank(medianOfMedians, setOfElements, greaterThan, lessThan);
+    std::cout << "Rank of median: " << rankOfMedian << '\n';
 
     //compare rank to k
     if (rankOfMedian == k)
@@ -57,11 +59,21 @@ int select(int k, std::vector<int> setOfElements, std::vector<int> originalInput
     }
     else if (rankOfMedian < k)
     {
-        return select(k, greaterThan, originalInput, sizeOfGroups);
+        std::cout << "greater" << '\n';
+        // for (int i = 0; i < greaterThan.size(); i++)
+        // {
+        //     std::cout << greaterThan[i] << "," << std::endl;
+        // }
+        return select(k - rankOfMedian, greaterThan, sizeOfGroups);
     }
     else
     {
-        return select(k, lessThan, originalInput, sizeOfGroups);
+        std::cout << "less" << '\n';
+        // for (int i = 0; i < lessThan.size(); i++)
+        // {
+        //     std::cout << lessThan[i] << "," << std::endl;
+        // }
+        return select(k, lessThan, sizeOfGroups);
     }
 }
 
@@ -144,17 +156,17 @@ int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
     }
 }
 
-int getRank(int medianOfMedians, std::vector<int> originalInput, std::vector<int>& greaterThan, std::vector<int>& lessThan)
+int getRank(int medianOfMedians, std::vector<int> setOfElements, std::vector<int>& greaterThan, std::vector<int>& lessThan)
 {
-    for (int i = 0; i < originalInput.size(); i++)
+    for (int i = 0; i < setOfElements.size(); i++)
     {
-        if (originalInput[i] > medianOfMedians)
+        if (setOfElements[i] > medianOfMedians)
         {
-            greaterThan.push_back(originalInput[i]);
+            greaterThan.push_back(setOfElements[i]);
         }
-        else if (originalInput[i] < medianOfMedians)
+        else if (setOfElements[i] < medianOfMedians)
         {
-            lessThan.push_back(originalInput[i]);
+            lessThan.push_back(setOfElements[i]);
         }
     }
     return (lessThan.size() + 1);
