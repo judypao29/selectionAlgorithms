@@ -46,11 +46,9 @@ int select(int k, std::vector<int> setOfElements, int sizeOfGroups)
 
     //recursive call to find median of medians
     int medianOfMedians = medOfMedRecur(setOfElements, sizeOfGroups);
-    std::cout << "Median: " << medianOfMedians << '\n';
 
     //get rank of the medianOfMedians
     int rankOfMedian = getRank(medianOfMedians, setOfElements, greaterThan, lessThan);
-    std::cout << "Rank of median: " << rankOfMedian << '\n';
 
     //compare rank to k
     if (rankOfMedian == k)
@@ -59,20 +57,10 @@ int select(int k, std::vector<int> setOfElements, int sizeOfGroups)
     }
     else if (rankOfMedian < k)
     {
-        std::cout << "greater" << '\n';
-        // for (int i = 0; i < greaterThan.size(); i++)
-        // {
-        //     std::cout << greaterThan[i] << "," << std::endl;
-        // }
         return select(k - rankOfMedian, greaterThan, sizeOfGroups);
     }
     else
     {
-        std::cout << "less" << '\n';
-        // for (int i = 0; i < lessThan.size(); i++)
-        // {
-        //     std::cout << lessThan[i] << "," << std::endl;
-        // }
         return select(k, lessThan, sizeOfGroups);
     }
 }
