@@ -2,6 +2,7 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<chrono>
 
 // format: ./run file.csv <int k>
 int main(int argc, char* argv[])
@@ -20,9 +21,20 @@ int main(int argc, char* argv[])
   }
   inputData.close();
 
+  //start timer
+  auto start = std::chrono::high_resolution_clock::now();
+
+  //sort and return the k-th element
   std::sort(vectorOfData.begin(), vectorOfData.end());
 
-  std::cout << "The k-th element where k is " << k << " is: " << vectorOfData[k - 1] << std::endl;
+  //stop timer
+  auto stop = std::chrono::high_resolution_clock::now();
 
+  //get duration
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+  std::cout << "The k-th element where k is " << k << " is: " << vectorOfData[k - 1] << std::endl;
+  std::cout << "Time taken by Sorting: "
+           << duration.count() << " microseconds" << std::endl;
   return 0;
 }
