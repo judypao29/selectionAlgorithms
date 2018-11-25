@@ -1,11 +1,3 @@
-/*
-o	initialize heap.
-o	read each item in csv and insert <size of groups> items into a heap.
-o	Use heap to find median of the group by popping, then empty the heap.
-o	Put each median into an array.
-o	Repeat until everything is read in.
-*/
-
 #include<fstream>
 #include<iostream>
 #include<string>
