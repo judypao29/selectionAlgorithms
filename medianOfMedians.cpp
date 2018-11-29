@@ -4,9 +4,13 @@
 #include<vector>
 #include <chrono>
 
-int select(int k, std::vector<int> setOfElements, int sizeOfGroups);
-int getRank(int medianOfMedians, std::vector<int> setOfElements, std::vector<int>& greaterThan, std::vector<int>& lessThan);
-int medOfMedRecur(std::vector<int> medians, int sizeOfGroups);
+int select(int k, std::vector<int>& setOfElements, int sizeOfGroups);
+
+//this gets slower when passed in by reference for some reason
+int getRank(int medianOfMedians, std::vector<int> setOfElements,
+    std::vector<int>& greaterThan, std::vector<int>& lessThan);
+int medOfMedRecur(std::vector<int>& medians, int sizeOfGroups);
+
 // format: ./run file.csv <int k> <int sizeOfGroups>
 int main(int argc, char* argv[])
 {
@@ -43,7 +47,7 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-int select(int k, std::vector<int> setOfElements, int sizeOfGroups)
+int select(int k, std::vector<int>& setOfElements, int sizeOfGroups)
 {
     std::vector<int> greaterThan;
     std::vector<int> lessThan;
@@ -69,7 +73,7 @@ int select(int k, std::vector<int> setOfElements, int sizeOfGroups)
     }
 }
 
-int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
+int medOfMedRecur(std::vector<int>& elements, int sizeOfGroups)
 {
     if (elements.empty())
     {
@@ -86,20 +90,20 @@ int medOfMedRecur(std::vector<int> elements, int sizeOfGroups)
     std::vector<int> heap;
 
     //split into groups of specified size, push median of each group into the mediansVector
-    for (int i = 0; i < elements.size(); i++)
+    for (int i = 0; i < elements.size(); i++) 
     {
         if (counter != sizeOfGroups)
         {
             heap.push_back(elements[i]);
             counter++;
         }
-        else
+        else                                                        //occurs n/sizeOfGroups times.
         {
-            make_heap(heap.begin(), heap.end());
+            make_heap(heap.begin(), heap.end());                    //make_heap = 3(sizeOfGroups)
             for (int i = 0; i < (sizeOfGroups / 2); i++)
             {
-                pop_heap(heap.begin(), heap.end());
-                heap.pop_back();
+                pop_heap(heap.begin(), heap.end());                 //pop-heap = 2log(sizeOfGroups)
+                heap.pop_back();                                    //pop_back = constant
             }
             pop_heap(heap.begin(), heap.end());
             mediansVector.push_back(heap.back());
