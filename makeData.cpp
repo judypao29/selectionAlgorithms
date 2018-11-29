@@ -14,6 +14,7 @@ int main(int argc, char * argv[])
 
   srand (time(NULL));
   while (set->size() != datasetSize)
+
   {
     randomNumber = rand();
     if (randomNumber == 0)
@@ -26,6 +27,8 @@ int main(int argc, char * argv[])
       std::cout << randomNumber << ",";
     }
   }
+
   delete set;
+  
   return 0;
 }
