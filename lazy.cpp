@@ -73,7 +73,7 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
     std::sort(multiSubsetOfN.begin(), multiSubsetOfN.end());
 
 
-    int x = (k * (floor(pow(input.size(), -0.25))));
+    int x = floor((k * (pow(input.size(), -0.25))));
     int leftA = multiSubsetOfN[getA(x, input.size())];
     int rightB = multiSubsetOfN[getB(x, input.size())];
 
@@ -96,7 +96,7 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
         if ((k > rankB)||
         (lessThanB.size() > (4 * (pow(input.size(), 0.75)) + 2)))
         {
-            return -1;
+            return lazySelect(k, input, count);
         }
         else
         {
@@ -111,7 +111,7 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
         if ((k < rankA )||
         (greaterThanA.size() > (4 * (pow(input.size(), 0.75)) + 2)))
         {
-            return -1;
+            return lazySelect(k, input, count);
         }
         else
         {
@@ -122,17 +122,18 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
     else if ((k >= (pow(input.size(), 0.25))) &&
     (k <= (input.size() - (pow(input.size(), 0.25)))))
     {
+        std::cout << "Middle case" << '\n';
         //get P between A and B
         // if not in P, recursive call
         if (((k > rankB) || (k < rankA)) ||
         (betweenAandB.size() > (4 * (pow(input.size(), 0.75)) + 2)))
         {
-            return -1;
+            return lazySelect(k, input, count);
         }
         else
         {
             std::sort(betweenAandB.begin(), betweenAandB.end());
-            return betweenAandB[k - rankA];
+            return betweenAandB.at(k - rankA);
         }
     }
     return 0;
@@ -181,6 +182,8 @@ std::vector<int>& betweenAandB, int leftA, int rightB, int k)
     }
     int rankA = input.size() - greaterThanA.size() + 1;
     int rankB = lessThanB.size();
+
+    std::cout << rankA << "\t" << rankB << "\n";
 
     return std::make_pair(rankA, rankB);
 }
