@@ -33,9 +33,8 @@ int main(int argc, char* argv[])
 
   //get duration
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-  std::cout << "vecSize: " <<vectorOfData.size() << '\n';
 
-  // std::cout << "The k-th element where k is " << k << " is: " << vectorOfData[k - 1] << std::endl;
+  std::cout << "The k-th element where k is " << k << " is: " << vectorOfData[k - 1] << std::endl;
   std::cout << "Time taken by Sorting: "
            << duration.count() << " microseconds" << std::endl;
   return 0;
