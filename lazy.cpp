@@ -90,9 +90,6 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
     {
         //get P leqB
         // if not in P, recursive call
-        std::cout << "B " << rankB << std::endl;
-        std::cout << "A " << rankA << std::endl;
-        std::cout << k - rankA << std::endl;
         if ((k > rankB)||
         (lessThanB.size() > (4 * (pow(input.size(), 0.75)) + 2)))
         {
@@ -122,7 +119,6 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
     else if ((k >= (pow(input.size(), 0.25))) &&
     (k <= (input.size() - (pow(input.size(), 0.25)))))
     {
-        std::cout << "Middle case" << '\n';
         //get P between A and B
         // if not in P, recursive call
         if (((k > rankB) || (k < rankA)) ||
@@ -182,8 +178,6 @@ std::vector<int>& betweenAandB, int leftA, int rightB, int k)
     }
     int rankA = input.size() - greaterThanA.size() + 1;
     int rankB = lessThanB.size();
-
-    std::cout << rankA << "\t" << rankB << "\n";
 
     return std::make_pair(rankA, rankB);
 }
