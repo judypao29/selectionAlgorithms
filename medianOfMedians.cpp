@@ -4,7 +4,6 @@
 #include<vector>
 #include <chrono>
 
-<<<<<<< HEAD
 int select(int k, std::vector<int>& setOfElements, int sizeOfGroups);
 
 //this gets slower when passed in by reference for some reason
@@ -12,11 +11,6 @@ int getRank(int medianOfMedians, std::vector<int> setOfElements,
     std::vector<int>& greaterThan, std::vector<int>& lessThan);
 int medOfMedRecur(std::vector<int>& medians, int sizeOfGroups);
 
-=======
-int select(int k, std::vector<int> setOfElements, int sizeOfGroups);
-int getRank(int medianOfMedians, std::vector<int> setOfElements, std::vector<int>& greaterThan, std::vector<int>& lessThan);
-int medOfMedRecur(std::vector<int> medians, int sizeOfGroups);
->>>>>>> 9df0af32fe7d854f2c543a8f671150c7f6e9d29a
 // format: ./run file.csv <int k> <int sizeOfGroups>
 int main(int argc, char* argv[])
 {
