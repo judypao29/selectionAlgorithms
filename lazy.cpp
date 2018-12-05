@@ -129,7 +129,7 @@ int lazySelect(int k, std::vector<int>& input, unsigned long count)
         else
         {
             std::sort(betweenAandB.begin(), betweenAandB.end());
-            return betweenAandB.at(k - rankA);
+            return betweenAandB[k - rankA];
         }
     }
     return 0;

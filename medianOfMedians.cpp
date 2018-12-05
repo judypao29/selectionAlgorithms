@@ -52,6 +52,9 @@ int select(int k, std::vector<int>& setOfElements, int sizeOfGroups)
     std::vector<int> greaterThan;
     std::vector<int> lessThan;
 
+    greaterThan.reserve(setOfElements.size());
+    lessThan.reserve(setOfElements.size());
+
     //recursive call to find median of medians
     int medianOfMedians = medOfMedRecur(setOfElements, sizeOfGroups);
 
@@ -87,7 +90,9 @@ int medOfMedRecur(std::vector<int>& elements, int sizeOfGroups)
 
     int counter = 0;
     std::vector<int> mediansVector;
+    // mediansVector.reserve((elements.size() / 5) + 1);
     std::vector<int> heap;
+    heap.reserve(sizeOfGroups);
 
     //split into groups of specified size, push median of each group into the mediansVector
     for (int i = 0; i < elements.size(); i++)
@@ -99,21 +104,24 @@ int medOfMedRecur(std::vector<int>& elements, int sizeOfGroups)
         }
         else                                                        //occurs n/sizeOfGroups times.
         {
-            make_heap(heap.begin(), heap.end());                    //make_heap = 3(sizeOfGroups)
-            for (int i = 0; i < (sizeOfGroups / 2); i++)
-            {
-                pop_heap(heap.begin(), heap.end());                 //pop-heap = 2log(sizeOfGroups)
-                heap.pop_back();                                    //pop_back = constant
-            }
-            pop_heap(heap.begin(), heap.end());
-            mediansVector.push_back(heap.back());
+            // make_heap(heap.begin(), heap.end());                    //make_heap = 3(sizeOfGroups)
+            // for (int i = 0; i < (sizeOfGroups / 2); i++)
+            // {
+            //     pop_heap(heap.begin(), heap.end());                 //pop-heap = 2log(sizeOfGroups)
+            //     heap.pop_back();                                    //pop_back = constant
+            // }
+            // pop_heap(heap.begin(), heap.end());
+            // mediansVector.push_back(heap.back());
+            std::sort(heap.begin(), heap.end());
+            mediansVector.push_back(heap[sizeOfGroups / 2]);
+            heap.clear();
 
             //empty the heap
-            while(!heap.empty())
-            {
-                heap.pop_back();
-            }
-            heap.push_back(elements[i]);
+            // while(!heap.empty())
+            // {
+            //     heap.pop_back();
+            // }
+            // heap.push_back(elements[i]);
             counter = 1;
         }
     }
@@ -122,14 +130,17 @@ int medOfMedRecur(std::vector<int>& elements, int sizeOfGroups)
     if (heap.size() == sizeOfGroups)
     {
         counter = 0;
-        make_heap(heap.begin(), heap.end());
-        for (int i = 0; i < (sizeOfGroups / 2); i++)
-        {
-            pop_heap(heap.begin(), heap.end());
-            heap.pop_back();
-        }
-        pop_heap(heap.begin(), heap.end());
-        mediansVector.push_back(heap.back());
+        // make_heap(heap.begin(), heap.end());
+        // for (int i = 0; i < (sizeOfGroups / 2); i++)
+        // {
+        //     pop_heap(heap.begin(), heap.end());
+        //     heap.pop_back();
+        // }
+        // pop_heap(heap.begin(), heap.end());
+        // mediansVector.push_back(heap.back());
+        std::sort(heap.begin(), heap.end());
+        mediansVector.push_back(heap[sizeOfGroups / 2]);
+        // heap.clear();
     }
 
     //if there's nothing in the mediansVector, push all elements in the heap to mediansVector
