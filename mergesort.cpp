@@ -55,10 +55,6 @@ void mergeSort(std::vector<int>& data, int left, int right)
     mergeSort(data, left, middle);
     mergeSort(data, middle+1, right);
     merge(data, left, middle, right);
-
-    // for (const auto v : data)
-    //     std::cout << v << ", ";
-    // std::cout << "\n";
 }
 
 void merge(std::vector<int>& data, int left, int middle, int right)
@@ -82,7 +78,7 @@ void merge(std::vector<int>& data, int left, int middle, int right)
         temp2.push_back(data[middle + 1 + j]);
     }
 
-    /* Merge the temp vecs back into arr[l..r]*/
+    /* Merge the temp vecs back into data[l..r]*/
     int i = 0, j = 0;
     int k = left;
     while (i < n1 && j < n2)
@@ -107,7 +103,7 @@ void merge(std::vector<int>& data, int left, int middle, int right)
         k++;
     }
 
-    /* Copy the remaining elements of R[], if there
+    /* Copy the remaining elements of temp2, if there
        are any */
     while (j < n2)
     {
@@ -116,45 +112,3 @@ void merge(std::vector<int>& data, int left, int middle, int right)
         k++;
     }
 }
-
-
-// void merge( std::vector<int>& data, int left, int middle, int right)
-//   {
-//     int t1 = left;
-//     int t2 = middle + 1;
-//     int N1 = middle;
-//     int N2 = right;
-//     std::vector<int> sortedArr;
-//     sortedArr.reserve((right - left) + 1);
-//     int sortedCounter = 0;
-//     while( t1 <= N1 && t2 <= N2 )
-//     {
-//       if( data[t1] <= data[t2] )
-//       {
-//         sortedArr[sortedCounter++] = data[t1++];
-//       }
-//       else
-//       {
-//         sortedArr[sortedCounter++] = data[t2++];
-//       }
-//     }
-//
-//     // Let's check whether either of t1 and t2 is still left
-//     while( t1 <= N1 )
-//     {
-//       sortedArr[sortedCounter++] = data[t1++];
-//     }
-//
-//     while( t2 <= N2 )
-//     {
-//       sortedArr[sortedCounter++] = data[t2++];
-//     }
-//
-//     // Let's replace sortedArray values into original array
-//     for( int i = 0; i < sortedArr.size(); i++ )
-//     {
-//       data[left++] = sortedArr[i];
-//     }
-//   }
-
-//
