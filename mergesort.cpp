@@ -5,8 +5,8 @@
 #include<chrono>
 
 
-void mergeSort(std::vector<int> data, int l, int r);
-void merge(std::vector<int> data, int l, int m, int r);
+void mergeSort(std::vector<int>& data, int l, int r);
+void merge(std::vector<int>& data, int l, int m, int r);
 
 // format: ./run file.csv <int k>
 int main(int argc, char* argv[])
@@ -45,30 +45,34 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-void mergeSort(std::vector<int> data, int left, int right)
+void mergeSort(std::vector<int>& data, int left, int right)
 {
-    if (left < right)
+    if (left >= right)
     {
-        int middle = left + (right - left) /2;
-        mergeSort(data, left, middle);
-        mergeSort(data, middle+1, right);
-        merge(data, left, middle, right);
+        return;
     }
+    int middle = left + (right - left) / 2;
+    mergeSort(data, left, middle);
+    mergeSort(data, middle+1, right);
+    merge(data, left, middle, right);
+
+    // for (const auto v : data)
+    //     std::cout << v << ", ";
+    // std::cout << "\n";
 }
 
-void merge(std::vector<int> data, int left, int middle, int right)
+void merge(std::vector<int>& data, int left, int middle, int right)
 {
-    int i, j, k;
     int n1 = middle - left + 1;
     int n2 =  right - middle;
 
-    /* create temp arrays */
+    /* create temp vecs */
     std::vector<int> temp1;
     std::vector<int> temp2;
     temp1.reserve(n1);
     temp2.reserve(n2);
 
-    /* Copy data to temp arrays L[] and R[] */
+    /* Copy data to temp vecs */
     for (int i = 0; i < n1; i++)
     {
         temp1.push_back(data[left + i]);
@@ -78,10 +82,9 @@ void merge(std::vector<int> data, int left, int middle, int right)
         temp2.push_back(data[middle + 1 + j]);
     }
 
-    /* Merge the temp arrays back into arr[l..r]*/
-    i = 0;
-    j = 0;
-    k = left;
+    /* Merge the temp vecs back into arr[l..r]*/
+    int i = 0, j = 0;
+    int k = left;
     while (i < n1 && j < n2)
     {
         if (temp1[i] <= temp2[j])
@@ -113,3 +116,45 @@ void merge(std::vector<int> data, int left, int middle, int right)
         k++;
     }
 }
+
+
+// void merge( std::vector<int>& data, int left, int middle, int right)
+//   {
+//     int t1 = left;
+//     int t2 = middle + 1;
+//     int N1 = middle;
+//     int N2 = right;
+//     std::vector<int> sortedArr;
+//     sortedArr.reserve((right - left) + 1);
+//     int sortedCounter = 0;
+//     while( t1 <= N1 && t2 <= N2 )
+//     {
+//       if( data[t1] <= data[t2] )
+//       {
+//         sortedArr[sortedCounter++] = data[t1++];
+//       }
+//       else
+//       {
+//         sortedArr[sortedCounter++] = data[t2++];
+//       }
+//     }
+//
+//     // Let's check whether either of t1 and t2 is still left
+//     while( t1 <= N1 )
+//     {
+//       sortedArr[sortedCounter++] = data[t1++];
+//     }
+//
+//     while( t2 <= N2 )
+//     {
+//       sortedArr[sortedCounter++] = data[t2++];
+//     }
+//
+//     // Let's replace sortedArray values into original array
+//     for( int i = 0; i < sortedArr.size(); i++ )
+//     {
+//       data[left++] = sortedArr[i];
+//     }
+//   }
+
+//
